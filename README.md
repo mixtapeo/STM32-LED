@@ -25,44 +25,42 @@ FreeRTOS will be used for task scheduling.
    - Navigate to `SYS` and scroll down to change the system clock to "TIM6".  
 5. Adjust the NVIC to enable the button interrupt.  
 6. Implement the code:  
-   - The code is straightforward and includes the LED toggle functionality.  
-
-```c
-/* USER CODE END Header_blink1start */
-void blink1start(void *argument)
-{
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-
-	for(;;)
-	  {
-	    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
-	    osDelay(1000);
-	  }
-  /* USER CODE END 5 */
-}
-
-/* USER CODE BEGIN Header_blink2start */
-/**
-* @brief Function implementing the blink2 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_blink2start */
-void blink2start(void *argument)
-{
-  /* USER CODE BEGIN blink2start */
-  /* Infinite loop */
-	for(;;){
-			if(osOK == osSemaphoreAcquire (buttonPressedHandle, 500))
-			{
-				HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+	```c
+	/* USER CODE END Header_blink1start */
+	void blink1start(void *argument)
+	{
+	  /* USER CODE BEGIN 5 */
+	  /* Infinite loop */
+	
+		for(;;)
+		  {
+		    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
+		    osDelay(1000);
+		  }
+	  /* USER CODE END 5 */
+	}
+	
+	/* USER CODE BEGIN Header_blink2start */
+	/**
+	* @brief Function implementing the blink2 thread.
+	* @param argument: Not used
+	* @retval None
+	*/
+	/* USER CODE END Header_blink2start */
+	void blink2start(void *argument)
+	{
+	  /* USER CODE BEGIN blink2start */
+	  /* Infinite loop */
+		for(;;){
+				if(osOK == osSemaphoreAcquire (buttonPressedHandle, 500))
+				{
+					HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+				}
 			}
-		}
-  /* USER CODE END blink2start */
-}
-```
-
+	  /* USER CODE END blink2start */
+	}
+	```
+7. Finally, start debug on the top menu, and press resume (on the top menu again), the system should be working as desired.
 # Challenges
 
 1. The system timer being stuck on the base clock after an interrupt caused the STM program to freeze.  
