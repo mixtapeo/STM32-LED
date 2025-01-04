@@ -10,7 +10,10 @@ FreeRTOS will be used for task scheduling.
    - <b>a.</b> "GPIO\_OUTPUT" on two pins (these will power the LEDs).  
    - <b>b.</b> Search for "EXTI" in the search bar and enable this on the available port.  
      - <b>i.</b> Navigate through the GPIO menu and enable the interrupt.  
-     - <b>ii.</b> This allows the blue button's external interrupt on the board to toggle the LED on press.  
+     - <b>ii.</b> This allows the blue button's external interrupt on the board to toggle the LED on press.
+       
+   ![image](https://github.com/user-attachments/assets/0e3f7d7e-c8c1-4d9e-9b5a-635222b3c502)
+
 3. Navigate to "Middleware" and enable FreeRTOS:  
    - <b>a.</b> Add up to two tasks:  
      - <b>i.</b> One task should have normal priority.  
@@ -20,12 +23,44 @@ FreeRTOS will be used for task scheduling.
      - **Note**: This step can be skipped by using a toggle variable in the code, but using a semaphore is cleaner and more efficient.  
 4. Modify the system clock to ensure accuracy:  
    - Navigate to `SYS` and scroll down to change the system clock to "TIM6".  
-5. Adjust the NVIC settings as required.  
+5. Adjust the NVIC to enable the button interrupt.  
 6. Implement the code:  
    - The code is straightforward and includes the LED toggle functionality.  
 
 ```c
-// update code
+/* USER CODE END Header_blink1start */
+void blink1start(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+
+	for(;;)
+	  {
+	    HAL_GPIO_TogglePin(LED_1_GPIO_Port, LED_1_Pin);
+	    osDelay(1000);
+	  }
+  /* USER CODE END 5 */
+}
+
+/* USER CODE BEGIN Header_blink2start */
+/**
+* @brief Function implementing the blink2 thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_blink2start */
+void blink2start(void *argument)
+{
+  /* USER CODE BEGIN blink2start */
+  /* Infinite loop */
+	for(;;){
+			if(osOK == osSemaphoreAcquire (buttonPressedHandle, 500))
+			{
+				HAL_GPIO_TogglePin(LED_2_GPIO_Port, LED_2_Pin);
+			}
+		}
+  /* USER CODE END blink2start */
+}
 ```
 
 # Challenges
